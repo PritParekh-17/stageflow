@@ -5,10 +5,6 @@ import Link from "next/link";
 import {
   Radio,
   ArrowRight,
-  ShieldCheck,
-  Key,
-  Mail,
-  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -33,11 +29,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   /*
-   * Restore the middleware cookie if the JWT is already
-   * present in localStorage.
-   *
-   * This allows protected routes to remain accessible
-   * after reopening the website.
+   * Restore the authentication cookie if a valid session
+   * already exists in localStorage.
    */
   useEffect(() => {
     const token = localStorage.getItem("stageflow_token");
@@ -59,8 +52,8 @@ export default function LoginPage() {
       await api.login(email, password);
 
       /*
-       * Force a complete navigation so Next.js middleware
-       * sees the newly-created stageflow_token cookie.
+       * Full navigation ensures Next.js middleware
+       * receives the newly-created authentication cookie.
        */
       window.location.replace("/dashboard");
     } catch (err: any) {
@@ -69,139 +62,110 @@ export default function LoginPage() {
     }
   };
 
+  const fillDemo = () => {
+    setEmail("demo@stageflow.io");
+    setPassword("password123");
+    setError("");
+  };
+
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-slate-50 dark:bg-[#090d16]">
-      <div className="w-full max-w-md">
+    <div className="flex-1 flex items-center justify-center p-4 py-12">
+      <div className="w-full max-w-md space-y-6">
+
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-5 h-14 w-14 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
-            <Radio className="h-7 w-7 text-white" />
+        <div className="text-center space-y-2">
+          <div className="inline-flex h-12 w-12 rounded-2xl bg-blue-600 items-center justify-center text-white shadow-md mb-2">
+            <Radio className="h-6 w-6" />
           </div>
 
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            Welcome back
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            StageFlow Control Login
           </h1>
 
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Sign in to your StageFlow operations workspace.
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Authenticate to access event stage control and operations
           </p>
         </div>
 
-        {/* Login Card */}
-        <div className="rounded-2xl border border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#0f172a] shadow-xl p-6 sm:p-8">
-          <form onSubmit={handleLogin} className="space-y-5">
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300"
-              >
-                Email
-              </label>
+        {/* Demo Fast-Fill Alert */}
+        <div className="p-3.5 rounded-xl border border-blue-500/20 bg-blue-500/5 dark:bg-blue-950/20 flex items-center justify-between">
+          <div className="text-xs space-y-0.5">
+            <span className="font-bold text-blue-600 dark:text-blue-400 block">
+              Judge / Evaluator Demo Account:
+            </span>
 
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+            <span className="text-slate-500 dark:text-slate-400">
+              demo@stageflow.io / password123
+            </span>
+          </div>
 
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="operator@stageflow.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={isLoading}
-                  autoComplete="email"
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
+          <button
+            type="button"
+            onClick={fillDemo}
+            disabled={isLoading}
+            className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Prefill
+          </button>
+        </div>
 
-            {/* Password */}
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300"
-              >
-                Password
-              </label>
-
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
-                  autoComplete="current-password"
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
+        {/* Form Card */}
+        <div className="rounded-2xl border border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#0f172a] p-6 shadow-xl">
+          <form onSubmit={handleLogin} className="space-y-4">
 
             {/* Error */}
             {error && (
-              <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2.5 text-sm text-rose-600 dark:text-rose-400">
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-medium">
                 {error}
               </div>
             )}
 
-            {/* Login Button */}
+            {/* Email */}
+            <Input
+              label="Operator Email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g. alex@stageflow.io"
+              disabled={isLoading}
+            />
+
+            {/* Password */}
+            <Input
+              label="Password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
+              disabled={isLoading}
+            />
+
+            {/* Login */}
             <Button
               type="submit"
+              variant="primary"
               size="lg"
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-blue-600 hover:bg-blue-700 font-bold"
+              isLoading={isLoading}
             >
-              {isLoading ? (
-                <>
-                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Authenticating…
-                </>
-              ) : (
-                <>
-                  Sign in
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              )}
+              <span>Authenticate & Enter</span>
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </form>
-
-          {/* Security */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <ShieldCheck className="h-4 w-4 text-emerald-500" />
-            Secure operator authentication
-          </div>
-
-          {/* Demo credentials */}
-          <div className="mt-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#131d33] p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Key className="h-4 w-4 text-blue-500" />
-
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                Demo Access
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Use the seeded operator credentials configured for the StageFlow
-              demo environment.
-            </p>
-          </div>
         </div>
 
-        {/* Back */}
-        <div className="mt-6 text-center">
+        {/* Register */}
+        <p className="text-center text-xs text-slate-500">
+          New organizer?{" "}
           <Link
-            href="/"
-            className="text-sm text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            href="/register"
+            className="text-blue-600 font-semibold hover:underline"
           >
-            ← Back to StageFlow
+            Register an account
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );
