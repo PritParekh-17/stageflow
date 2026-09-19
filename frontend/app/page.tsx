@@ -1,15 +1,39 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import {
-  Radio, Clock, Sparkles, ArrowRight, ShieldCheck,
-  AlertTriangle, RefreshCw, Layers, CheckCircle2, User, Play, ChevronRight
+  Radio,
+  Clock,
+  Sparkles,
+  ArrowRight,
+  AlertTriangle,
+  RefreshCw,
+  CheckCircle2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 
+function restoreSessionCookie(token: string) {
+  if (typeof document === "undefined") return;
+
+  const secure =
+    window.location.protocol === "https:" ? "; Secure" : "";
+
+  document.cookie =
+    `stageflow_token=${encodeURIComponent(token)}; Path=/; Max-Age=86400; SameSite=Lax${secure}`;
+}
+
 export default function LandingPage() {
+  useEffect(() => {
+    const token = localStorage.getItem("stageflow_token");
+
+    if (token) {
+      restoreSessionCookie(token);
+      window.location.replace("/dashboard");
+    }
+  }, []);
+
   return (
     <div className="flex-1 flex flex-col">
       {/* 1. HERO SECTION */}
@@ -31,20 +55,29 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            StageFlow gives anchors and organizers a real-time command center for schedules, speakers, transitions, delays, and AI-assisted stage communication.
+            StageFlow gives anchors and organizers a real-time command center
+            for schedules, speakers, transitions, delays, and AI-assisted
+            stage communication.
           </p>
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link href="/dashboard">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 px-6">
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 px-6"
+              >
                 <span>Open StageFlow</span>
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
 
             <Link href="/events">
-              <Button variant="outline" size="lg" className="px-6 border-slate-300 dark:border-slate-700">
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-6 border-slate-300 dark:border-slate-700"
+              >
                 <Radio className="h-4 w-4 mr-2 text-emerald-500 animate-pulse" />
                 <span>Launch Live Stage</span>
               </Button>
@@ -60,10 +93,12 @@ export default function LandingPage() {
                   <div className="h-3 w-3 rounded-full bg-rose-500"></div>
                   <div className="h-3 w-3 rounded-full bg-amber-500"></div>
                   <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+
                   <span className="ml-2 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
                     STAGEFLOW COMMAND ROOM — Bit N Build ’26
                   </span>
                 </div>
+
                 <Badge variant="live" pulse size="sm">
                   LIVE BROADCAST
                 </Badge>
@@ -77,19 +112,26 @@ export default function LandingPage() {
                     <span className="text-[10px] uppercase font-mono font-bold text-emerald-600 dark:text-emerald-400">
                       ● Active Live Session
                     </span>
-                    <span className="text-xs font-mono text-slate-500">09:30 — 10:00 (30m)</span>
+
+                    <span className="text-xs font-mono text-slate-500">
+                      09:30 — 10:00 (30m)
+                    </span>
                   </div>
+
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                     Opening Ceremony & Dignitary Welcome
                   </h3>
+
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                    Keynote Speaker: Dr. Rajesh Mehta • Dean of Engineering, GTU
+                    Keynote Speaker: Dr. Rajesh Mehta • Dean of Engineering,
+                    GTU
                   </p>
 
                   <div className="mt-4 flex items-center justify-between p-3 rounded-lg bg-slate-900 text-white">
                     <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
                       Master Countdown
                     </span>
+
                     <span className="text-2xl sm:text-3xl font-mono font-black text-emerald-400">
                       00:17:42
                     </span>
@@ -102,10 +144,14 @@ export default function LandingPage() {
                     <span className="text-[10px] uppercase font-mono font-bold text-amber-500">
                       Next Up (In 17m)
                     </span>
+
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-1">
                       Problem Statement Briefing
                     </h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Vikram Patel • Innovation Hub</p>
+
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Vikram Patel • Innovation Hub
+                    </p>
                   </div>
 
                   <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
@@ -127,11 +173,14 @@ export default function LandingPage() {
           <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 font-mono">
             The Reality of Live Stages
           </h2>
+
           <h3 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
             Live events break. Paper agendas fail.
           </h3>
+
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            When a keynote runs 10 minutes over, coordinators scramble on WhatsApp, anchors improvise blindly, and timelines desync.
+            When a keynote runs 10 minutes over, coordinators scramble on
+            WhatsApp, anchors improvise blindly, and timelines desync.
           </p>
         </div>
 
@@ -140,9 +189,15 @@ export default function LandingPage() {
             <div className="h-10 w-10 rounded-xl bg-rose-500/15 text-rose-600 flex items-center justify-center font-bold">
               <Clock className="h-5 w-5" />
             </div>
-            <h4 className="text-base font-bold text-slate-900 dark:text-white">Cascading Schedule Drift</h4>
+
+            <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              Cascading Schedule Drift
+            </h4>
+
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              One delayed speaker pushes the entire morning back. Organizers manually recalculate lunch breaks, sponsor slots, and jury briefings on the fly.
+              One delayed speaker pushes the entire morning back. Organizers
+              manually recalculate lunch breaks, sponsor slots, and jury
+              briefings on the fly.
             </p>
           </div>
 
@@ -150,9 +205,15 @@ export default function LandingPage() {
             <div className="h-10 w-10 rounded-xl bg-amber-500/15 text-amber-600 flex items-center justify-center font-bold">
               <AlertTriangle className="h-5 w-5" />
             </div>
-            <h4 className="text-base font-bold text-slate-900 dark:text-white">Anchor Disconnection</h4>
+
+            <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              Anchor Disconnection
+            </h4>
+
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Anchors hold printed schedules that are obsolete within two hours. They don’t know who arrived backstage or how much time is truly left.
+              Anchors hold printed schedules that are obsolete within two
+              hours. They don’t know who arrived backstage or how much time is
+              truly left.
             </p>
           </div>
 
@@ -160,9 +221,15 @@ export default function LandingPage() {
             <div className="h-10 w-10 rounded-xl bg-blue-500/15 text-blue-600 flex items-center justify-center font-bold">
               <RefreshCw className="h-5 w-5" />
             </div>
-            <h4 className="text-base font-bold text-slate-900 dark:text-white">Desynced Backstage Teams</h4>
+
+            <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              Desynced Backstage Teams
+            </h4>
+
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              AV engineers, timekeepers, emcees, and student volunteers operate on disconnected assumptions without a single source of truth.
+              AV engineers, timekeepers, emcees, and student volunteers
+              operate on disconnected assumptions without a single source of
+              truth.
             </p>
           </div>
         </div>
@@ -175,6 +242,7 @@ export default function LandingPage() {
             <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-mono">
               The StageFlow Solution
             </h2>
+
             <h3 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               From preparation to live execution in one flow.
             </h3>
@@ -182,17 +250,42 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center md:text-left">
             {[
-              { step: "01", title: "Build Agenda", desc: "Define sessions, set durations, and link keynote speakers." },
-              { step: "02", title: "Launch Control Room", desc: "Open the real-time stage deck on tablet, laptop, or confidence monitor." },
-              { step: "03", title: "Autonomous Delay Shift", desc: "Hit +10 min: future sessions recalculate automatically with zero refresh." },
-              { step: "04", title: "AI Stage Scripts", desc: "Generate transitions, speaker intros, and emergency announcements instantly." },
+              {
+                step: "01",
+                title: "Build Agenda",
+                desc: "Define sessions, set durations, and link keynote speakers.",
+              },
+              {
+                step: "02",
+                title: "Launch Control Room",
+                desc: "Open the real-time stage deck on tablet, laptop, or confidence monitor.",
+              },
+              {
+                step: "03",
+                title: "Autonomous Delay Shift",
+                desc: "Hit +10 min: future sessions recalculate automatically with zero refresh.",
+              },
+              {
+                step: "04",
+                title: "AI Stage Scripts",
+                desc: "Generate transitions, speaker intros, and emergency announcements instantly.",
+              },
             ].map((s) => (
-              <div key={s.step} className="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-[#1e293b] shadow-sm space-y-2">
+              <div
+                key={s.step}
+                className="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-[#1e293b] shadow-sm space-y-2"
+              >
                 <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">
                   STEP {s.step}
                 </span>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">{s.title}</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400">{s.desc}</p>
+
+                <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                  {s.title}
+                </h4>
+
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  {s.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -206,26 +299,43 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-500 text-xs font-bold uppercase tracking-wider">
               <span>Hero Feature</span>
             </div>
+
             <h3 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               One-click delay engine. <br />
-              <span className="text-rose-500">Autonomous schedule shift.</span>
+              <span className="text-rose-500">
+                Autonomous schedule shift.
+              </span>
             </h3>
+
             <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              When an unexpected delay happens, don’t redo your spreadsheet. Click <strong>+10 min</strong>. StageFlow instantly recalculates all downstream sessions, updates connected tablets via WebSockets, and writes an AI announcement for the emcee.
+              When an unexpected delay happens, don’t redo your spreadsheet.
+              Click <strong>+10 min</strong>. StageFlow instantly recalculates
+              all downstream sessions, updates connected tablets via WebSockets,
+              and writes an AI announcement for the emcee.
             </p>
 
             <ul className="space-y-2 text-xs font-medium text-slate-700 dark:text-slate-300">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>Non-destructive shifting (preserves original times for comparison)</span>
+                <span>
+                  Non-destructive shifting (preserves original times for
+                  comparison)
+                </span>
               </li>
+
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>Instant WebSocket broadcast across backstage and stage podiums</span>
+                <span>
+                  Instant WebSocket broadcast across backstage and stage
+                  podiums
+                </span>
               </li>
+
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>Contextual anchor announcement ready in one click</span>
+                <span>
+                  Contextual anchor announcement ready in one click
+                </span>
               </li>
             </ul>
 
@@ -245,6 +355,7 @@ export default function LandingPage() {
                 <span className="text-xs font-mono font-bold text-rose-500 uppercase">
                   SCHEDULE DELAY ENGINE
                 </span>
+
                 <span className="text-xs font-mono text-emerald-500 font-semibold">
                   +10 Minutes Applied
                 </span>
@@ -252,29 +363,56 @@ export default function LandingPage() {
 
               <div className="space-y-2 text-xs">
                 <div className="p-3 rounded-lg bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Hackathon Begins</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    Hackathon Begins
+                  </span>
+
                   <div className="flex items-center gap-2 font-mono">
-                    <span className="text-slate-400 line-through">10:30</span>
+                    <span className="text-slate-400 line-through">
+                      10:30
+                    </span>
+
                     <ArrowRight className="h-3 w-3 text-slate-400" />
-                    <span className="text-emerald-500 font-bold">10:40</span>
+
+                    <span className="text-emerald-500 font-bold">
+                      10:40
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-3 rounded-lg bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Lunch Break</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    Lunch Break
+                  </span>
+
                   <div className="flex items-center gap-2 font-mono">
-                    <span className="text-slate-400 line-through">13:00</span>
+                    <span className="text-slate-400 line-through">
+                      13:00
+                    </span>
+
                     <ArrowRight className="h-3 w-3 text-slate-400" />
-                    <span className="text-emerald-500 font-bold">13:10</span>
+
+                    <span className="text-emerald-500 font-bold">
+                      13:10
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-3 rounded-lg bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Mentor Round 1</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    Mentor Round 1
+                  </span>
+
                   <div className="flex items-center gap-2 font-mono">
-                    <span className="text-slate-400 line-through">14:00</span>
+                    <span className="text-slate-400 line-through">
+                      14:00
+                    </span>
+
                     <ArrowRight className="h-3 w-3 text-slate-400" />
-                    <span className="text-emerald-500 font-bold">14:10</span>
+
+                    <span className="text-emerald-500 font-bold">
+                      14:10
+                    </span>
                   </div>
                 </div>
               </div>
@@ -283,8 +421,11 @@ export default function LandingPage() {
                 <span className="font-mono text-[10px] uppercase font-bold text-indigo-500 block mb-1">
                   AI Announcement Output:
                 </span>
+
                 <p className="text-slate-700 dark:text-slate-300 italic">
-                  "Ladies and gentlemen, to ensure all teams receive optimal technical briefings, our schedule has shifted by 10 minutes..."
+                  "Ladies and gentlemen, to ensure all teams receive optimal
+                  technical briefings, our schedule has shifted by 10
+                  minutes..."
                 </p>
               </div>
             </div>
@@ -298,13 +439,18 @@ export default function LandingPage() {
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
             Ready to operate the stage with absolute confidence?
           </h2>
+
           <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
-            Experience the full Bit N Build ’26 demo workflow with seeded data, live countdowns, and real-time synchronization.
+            Experience the full Bit N Build ’26 demo workflow with seeded
+            data, live countdowns, and real-time synchronization.
           </p>
 
           <div className="pt-2">
             <Link href="/dashboard">
-              <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 shadow-xl">
+              <Button
+                size="lg"
+                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 shadow-xl"
+              >
                 <span>Enter Operations Dashboard</span>
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
@@ -321,7 +467,11 @@ export default function LandingPage() {
             <span className="font-bold text-slate-300">STAGEFLOW</span>
             <span>• Bit N Build ’26 (Gujarat Round)</span>
           </div>
-          <p>Problem Statement PS-5: Smart Anchor & Stage Flow Management System</p>
+
+          <p>
+            Problem Statement PS-5: Smart Anchor & Stage Flow Management
+            System
+          </p>
         </div>
       </footer>
     </div>
